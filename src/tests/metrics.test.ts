@@ -28,7 +28,7 @@ describe('Metrics', function () {
 
   describe('#save', function () {
     
-    it('should save return an array with 1 item', function () {
+    it('should get empty array on non existing group', function () {
       dbMet.get("0", function (err: Error | null, result?: Metric[]) {
         expect(err).to.be.null
         expect(result).to.not.be.undefined
@@ -36,7 +36,7 @@ describe('Metrics', function () {
       })
     })
 
-    it('', function () {
+    it('should save return an array with 1 item', function () {
       var met: Metric[] = []
         met.push(new Metric('1221122123', 10))
       dbMet.save("1",met,(err: Error | null, result?:Metric[]) => {

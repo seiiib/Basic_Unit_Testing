@@ -2,12 +2,15 @@ import express = require('express')
 import { MetricsHandler } from './metrics'
 import path = require('path')
 import bodyparser = require('body-parser')
+import morgan = require('morgan')
 
 const app = express()
 const port: string = process.env.PORT || '8080'
 app.use(express.static(path.join(__dirname, '/../public')))
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded())
+
+app.use(morgan('dev'))
 
 app.set('views', __dirname + "/../views")
 app.set('view engine', 'ejs');
