@@ -1,11 +1,11 @@
 import express = require('express')
-import { MetricsHandler } from './metrics'
 import path = require('path')
 import bodyparser = require('body-parser')
 import morgan = require('morgan')
 import session = require('express-session')
 import levelSession = require('level-session-store')
 import { UserHandler, User } from './user'
+import { MetricsHandler } from './metrics'
 
 const app = express()
 const authRouter = express.Router()
@@ -14,33 +14,28 @@ const port: string = process.env.PORT || '8080'
 const dbMet: MetricsHandler = new MetricsHandler('./db/metrics')
 const dbUser: UserHandler = new UserHandler('./db/users')
 
-
 app.use(express.static(path.join(__dirname, '/../public')))
-app.use(bodyparser.json())
-app.use(bodyparser.urlencoded())
-app.use(morgan('dev'))
-app.use(session({
+
+.use(bodyparser.json())
+.use(bodyparser.urlencoded())
+
+.use(authRouter)
+.use(morgan('dev'))
+.use(session({
   secret: 'my very secret phrase',
   store: new LevelStore('./db/sessions'),
   resave: true,
   saveUninitialized: true
 }))
 
+app.set('views', __dirname + "/../views")
+app.set('view engine', 'ejs');
+
 authRouter.get('/login', (req: any, res: any) => {
   res.render('login')
 })
 
-authRouter.get('/signup', (req: any, res: any) => {
-  res.render('signup')
-})
-
-authRouter.get('/logout', (req: any, res: any) => {
-  delete req.session.loggedIn
-  delete req.session.user
-  res.redirect('/login')
-})
-
-authRouter.post('/login', (req: any, res: any, next: any) => {
+.post('/login', (req: any, res: any, next: any) => {
   dbUser.get(req.body.username, (err: Error | null, result?: User) => {
     if (err) next(err)
     if (result === undefined || !result.validatePassword(req.body.password)) {
@@ -53,16 +48,26 @@ authRouter.post('/login', (req: any, res: any, next: any) => {
   })
 })
 
-app.use(authRouter)
+.get('/signup', (req: any, res: any) => {
+  res.render('signup')
+})
+
+.get('/logout', (req: any, res: any) => {
+  delete req.session.loggedIn
+  delete req.session.user
+  res.redirect('/login')
+})
 
 const userRouter = express.Router()
+app.use('/user', userRouter)
 
 userRouter.post('/', (req: any, res: any, next: any) => {
   dbUser.get(req.body.username, function (err: Error | null, result?: User) {
     if (!err || result !== undefined) {
       res.status(409).send("user already exists")
     } else {
-      dbUser.save(req.body, function (err: Error | null) {
+      let user = new User(req.body.username, req.body.email, req.body.password);
+      dbUser.save(user, function (err: Error | null) {
         if (err) next(err)
         else res.status(201).send("user persisted")
       })
@@ -70,7 +75,7 @@ userRouter.post('/', (req: any, res: any, next: any) => {
   })
 })
 
-userRouter.get('/:username', (req: any, res: any, next: any) => {
+.get('/:username', (req: any, res: any, next: any) => {
   dbUser.get(req.params.username, function (err: Error | null, result?: User) {
     if (err || result === undefined) {
       res.status(404).send("user not found")
@@ -88,15 +93,10 @@ app.get('/', authCheck, (req: any, res: any) => {
   res.render('index', { name: req.session.username })
 })
 
-app.use('/user', userRouter)
-
-app.set('views', __dirname + "/../views")
-app.set('view engine', 'ejs');
-
-app.get('/', (req: any, res: any) => {
-  res.write('Hello world')
-  res.end()
-})
+// app.get('/', (req: any, res: any) => {
+//   res.write('Hello world')
+//   res.end()
+// })
 
 app.get('/hello/:name', (req: any, res: any) => {
   res.render('index.ejs', {name: req.params.name})

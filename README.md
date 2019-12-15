@@ -1,14 +1,14 @@
-# Lab 4 Unit_Testing
+# Final Project Nodejs
 
 ## Introduction
 
-The basic Node.js application on TypeScript.
+This is the final project for the Nodejs class
 
 ## Installing
 
 ```bash
-git clone https://github.com/sergkudinov/ece-nodejs-3-leveldb.git
-cd ece-nodejs-3-leveldb
+git clone https://github.com/seiiib/Basic_Final_Project.git
+cd Basic_Final_Project
 npm install
 ```
 
@@ -25,3 +25,5 @@ npm run dev
 ```
 
 ## Contributors
+
+Sebastien Ye

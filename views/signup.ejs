@@ -10,29 +10,24 @@
             <hr/>
               <form action="/signup" method="post">
                   <div class="form-group">
-                    <label for="form_firstname">Firstname</label>
-                    <input id="form_firstname" type="text" name="firstname" />
+                    <label for="form_username">Username</label>
+                    <input id="form_username" type="emaild" name="username" />
                   </div>
                   <div class="form-group">
-                    <label for="form_lastname">Lastname</label>
-                    <input id="form_lastname" type="text" name="lastname" />
+                    <label>Email</label>
+                    <input id="form_email" type="email" name="email" />
                   </div>
                   <div class="form-group">
                     <label for="form_password">Password</label>
                     <input id="form_password" type="password" name="password" />
                   </div>
-                  <div class="form-group">
-                    <label for="form_confirm_password">Confirm Password</label>
-                    <input id="form_confirm_password" type="confirm_password" name="confirm_password" />
-                  </div>
                   <button class="btn btn-primary btn-block" type="submit" value="Submit">Create</button>
               </form>
                 <hr/>
-            <button class="btn btn-success btn-block" type="submit" href="/login" onClick='document.location.href="/login"'>
+            <button class="btn btn-danger btn-block" type="submit" href="/login" onClick='document.location.href="/login"'>
               Cancel
             </button>
         </div>
     
   </body>
 </html>
-

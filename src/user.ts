@@ -42,6 +42,7 @@ export class User {
     }
 
     static fromDb(username: string, value: any): User {
+      console.log(value)
       const [password, email] = value.split(":")
       return new User(username, email, password)
     }
@@ -54,7 +55,8 @@ export class User {
       return this.password
     }
   
-    public validatePassword(toValidate: string): any {
+    public validatePassword(toValidate: string): boolean {
       // return comparison with hashed password
+      return (this.password === toValidate)
     }
   }
