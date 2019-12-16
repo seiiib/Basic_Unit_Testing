@@ -66,7 +66,8 @@ userRouter.post('/', (req: any, res: any, next: any) => {
     if (!err || result !== undefined) {
       res.status(409).send("user already exists")
     } else {
-      let user = new User(req.body.username, req.body.email, req.body.password);
+      let user = new User(req.body.username, req.body.email, req.body.password)
+      console.log(user)
       dbUser.save(user, function (err: Error | null) {
         if (err) next(err)
         else res.status(201).send("user persisted")

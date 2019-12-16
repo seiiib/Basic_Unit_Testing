@@ -13,7 +13,7 @@ export class UserHandler {
   }
 
   public save(user: User, callback: (err: Error | null) => void) {
-    this.db.put(`user:${user.username}`, `${user.getPassword}:${user.email}`, (err: Error | null) => {
+    this.db.put(`user:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
       callback(err)
     })
   }
@@ -49,6 +49,7 @@ export class User {
   
     public setPassword(toSet: string): void {
       // Hash and set password
+      this.password = toSet
     }
   
     public getPassword(): string {
